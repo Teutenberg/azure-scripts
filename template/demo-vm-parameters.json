@@ -1,0 +1,50 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "value": "australiasoutheast"
+        },
+        "virtualMachineName": {
+            "value": "demo"
+        },
+        "virtualMachineSize": {
+            "value": "Standard_D2_v3"
+        },
+        "adminUsername": {
+            "value": "waynet"
+        },
+        "virtualNetworkName": {
+            "value": "DevAutomationVN"
+        },
+        "networkInterfaceName": {
+            "value": "demo610"
+        },
+        "networkSecurityGroupName": {
+            "value": "demo-nsg"
+        },
+        "adminPassword": {
+            "reference": {
+				"keyVault": {
+					"id": "/subscriptions/153e948b-1bb2-4ef9-8d7d-a998ca12e7d7/resourceGroups/DevAutomationRG/providers/Microsoft.KeyVault/vaults/DevAutomationKV"
+              },
+              "secretName": "Admin"
+            }
+        },
+        "storageAccountName": {
+            "value": "devautomationsa"
+        },
+        "subnetName": {
+            "value": "default"
+        },
+        "publicIpAddressName": {
+            "value": "demo-ip"
+        },
+        "publicIpAddressType": {
+            "value": "Dynamic"
+        },
+        "publicIpAddressSku": {
+            "value": "Basic"
+        }
+    }
+}
