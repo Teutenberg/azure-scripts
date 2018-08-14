@@ -32,7 +32,7 @@
             "value": "demo-nsg"
         },
         "storageAccountName": {
-            "value": "devautomationsa"
+            "value": "demosa"
         },
         "subnetName": {
             "value": "default"
