@@ -23,9 +23,6 @@
         "networkSecurityGroupName": {
             "value": "demo-nsg"
         },
-        "adminPassword": {
-            "value": null
-        },
         "storageAccountName": {
             "value": "devautomationsa"
         },
