@@ -14,6 +14,14 @@
         "adminUsername": {
             "value": "waynet"
         },
+        "adminPassword": {
+            "reference": {
+                "keyVault": {
+                    "id": "/subscriptions/153e948b-1bb2-4ef9-8d7d-a998ca12e7d7/resourceGroups/DevAutomationRG/providers/Microsoft.KeyVault/vaults/DevAutomationKV"
+                },
+                "secretName": "demo-vm-template-admin"
+            }
+        },
         "virtualNetworkName": {
             "value": "DevAutomationVN"
         },
