@@ -24,12 +24,7 @@
             "value": "demo-nsg"
         },
         "adminPassword": {
-            "reference": {
-				"keyVault": {
-					"id": "/subscriptions/153e948b-1bb2-4ef9-8d7d-a998ca12e7d7/resourceGroups/DevAutomationRG/providers/Microsoft.KeyVault/vaults/DevAutomationKV"
-              },
-              "secretName": "Admin"
-            }
+            "value": null
         },
         "storageAccountName": {
             "value": "devautomationsa"
