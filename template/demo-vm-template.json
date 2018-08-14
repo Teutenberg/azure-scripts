@@ -79,7 +79,7 @@
                         "vhd": {
                             "uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-win-os.vhd')]"
                         },
-                        "name": "[concat(parameters('virtualMachineName'),'-win-os')]",
+                        "name": "[concat(parameters('virtualMachineName'),'-win-os')]"
                     },
                     "dataDisks": [
                         {
