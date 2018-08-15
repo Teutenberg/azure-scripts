@@ -1,7 +1,7 @@
 {
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
+        "parameters": {
         "location": {
             "type": "string"
         },
@@ -14,32 +14,39 @@
         "adminUsername": {
             "type": "string"
         },
+        "adminPassword": {
+            "type": "securestring"
+        },
         "virtualNetworkName": {
             "type": "string"
         },
         "networkInterfaceName": {
             "type": "string"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'-ni')]"
         },
         "networkSecurityGroupName": {
             "type": "string"
-        },
-        "adminPassword": {
-            "type": "securestring"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'-nsg')]"
         },
         "storageAccountName": {
             "type": "string"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'-sa')]"
         },
         "subnetName": {
             "type": "string"
+            "defaultValue": "default"
         },
         "publicIpAddressName": {
             "type": "string"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'-ip')]"
         },
         "publicIpAddressType": {
             "type": "string"
+            "defaultValue": "Dynamic"
         },
         "publicIpAddressSku": {
             "type": "string"
+            "defaultValue": "Basic"
         }
     },
     "variables": {
@@ -88,7 +95,7 @@
                             "name": "[concat(parameters('virtualMachineName'),'-mssql-data')]",
                             "createOption": "Empty",
                             "vhd": {
-								"uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-data.vhd')]"
+                                "uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-data.vhd')]"
                             },
                             "caching": "ReadWrite",
                             "diskSizeGB": 1
@@ -98,7 +105,7 @@
                             "name": "[concat(parameters('virtualMachineName'),'-mssql-log')]",
                             "createOption": "Empty",
                             "vhd": {
-								"uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-log.vhd')]"
+                                "uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-log.vhd')]"
                             },
                             "caching": "ReadWrite",
                             "diskSizeGB": 1
@@ -108,7 +115,7 @@
                             "name": "[concat(parameters('virtualMachineName'),'-mssql-tempdb')]",
                             "createOption": "Empty",
                             "vhd": {
-								"uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-tempdb.vhd')]"
+                                "uri": "[concat(concat(concat('https://', parameters('storageAccountName'), '.blob.core.windows.net/'), 'vhds/'), parameters('virtualMachineName'), '-mssql-tempdb.vhd')]"
                             },
                             "caching": "ReadWrite",
                             "diskSizeGB": 1
@@ -191,7 +198,7 @@
                 ]
             }
         },
-		{
+        {
             "name": "[parameters('storageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
             "sku": {
