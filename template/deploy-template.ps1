@@ -26,8 +26,7 @@
  $parametersUri         = "https://raw.githubusercontent.com/Teutenberg/azure-scripts/master/template/demo-vm-parameters.json";
  $resourceGroupName     = "DevAutomationRG";
  $resourceGroupLocation = "Australia Southeast";
- $keyVaultName          = "DevAutomationKV"
-
+ 
 <#
 .SYNOPSIS
     Registers RPs
@@ -55,17 +54,20 @@ cd $PSScriptRoot;
 Write-Host "Selecting subscription '$subscriptionId'";
 Select-AzureRmSubscription -SubscriptionID $subscriptionId;
 
+$parameterData = (Invoke-WebRequest $parametersUri -Headers @{"Cache-Control"="no-cache"} -DisableKeepAlive).Content | ConvertFrom-Json;
+$templateData = (Invoke-WebRequest $templateUri -Headers @{"Cache-Control"="no-cache"} -DisableKeepAlive).Content | ConvertFrom-Json;
+
 # Register RPs
-$resourceProviders = ((Invoke-WebRequest $templateUri).Content | ConvertFrom-Json).resources.ForEach({$_.type.split('/')[0]}) | select -Unique
+$resourceProviders = $templateData.resources.ForEach({$_.type.split('/')[0]}) | select -Unique;
 if($resourceProviders.length) {
-    Write-Host "Registering resource providers"
+    Write-Host "Registering resource providers";
     foreach($resourceProvider in $resourceProviders) {
         RegisterRP($resourceProvider);
     }
 }
 
 #Create or check for existing resource group
-$resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
+$resourceGroup = Get-AzureRmResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue;
 if(!$resourceGroup)
 {
     Write-Host "Resource group '$resourceGroupName' does not exist. To create a new resource group, please enter a location.";
@@ -73,39 +75,38 @@ if(!$resourceGroup)
         $resourceGroupLocation = Read-Host "resourceGroupLocation";
     }
     Write-Host "Creating resource group '$resourceGroupName' in location '$resourceGroupLocation'";
-    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation
+    New-AzureRmResourceGroup -Name $resourceGroupName -Location $resourceGroupLocation;
 }
 else{
     Write-Host "Using existing resource group '$resourceGroupName'";
 }
 
 # Generate new secret and add to key vault if not exists already
-[Reflection.Assembly]::LoadWithPartialName("System.Web")
+[Reflection.Assembly]::LoadWithPartialName("System.Web");
 
-$secretKeyName = ((Invoke-WebRequest $parametersUri).Content | ConvertFrom-Json).parameters.adminPassword.reference.secretName
-$secret = (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName).SecretValue
+$keyVaultName  = Split-Path $parameterData.parameters.adminPassword.reference.KeyVault.id -Leaf;
+$secretKeyName = $parameterData.parameters.adminPassword.reference.secretName;
 
-if (!$secret) {
-    Write-Host 'Adding new secret in KeyVault...'
-    $secret = ConvertTo-SecureString -String ([system.web.security.membership]::GeneratePassword(24,4)) -AsPlainText -Force 
-    Set-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName -SecretValue $secret
+if ($keyVaultName -and $secretKeyName) {
+    $secret = (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName).SecretValue;
+
+    if (!$secret) {
+        Write-Host 'Adding new secret in KeyVault...';
+        $secret = ConvertTo-SecureString -String ([system.web.security.membership]::GeneratePassword(24,4)) -AsPlainText -Force;
+        Set-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName -SecretValue $secret;
+    } else {
+        Write-Host 'Using existing secret in KeyVault...';
+    }
 } else {
-    Write-Host 'Using existing secret in KeyVault...'
+    Write-Error 'Parameter adminPassword is missing the key vault reference';
 }
 
 # Start the deployment
 Write-Host "Starting deployment...";
-if((Invoke-WebRequest $parametersUri).StatusCode -eq 200) {
-    New-AzureRmResourceGroupDeployment `
-        -ResourceGroupName $resourceGroupName `
-        -TemplateUri $templateUri `
-        -TemplateParameterUri $parametersUri `
-        -verbose;
-} else {
-    New-AzureRmResourceGroupDeployment `
-        -ResourceGroupName $resourceGroupName `
-        -TemplateUri $templateUri `
-        -verbose;
-}
+New-AzureRmResourceGroupDeployment `
+    -ResourceGroupName $resourceGroupName `
+    -TemplateUri $templateUri `
+    -TemplateParameterUri $parametersUri `
+    -verbose;
 
-Write-Host "Secret Value is:" (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName).SecretValueText
+Write-Host "Secret Value is:" (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName).SecretValueText;
