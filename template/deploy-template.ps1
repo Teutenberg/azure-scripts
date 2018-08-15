@@ -22,7 +22,7 @@
 #>
 
  $subscriptionId        = "153e948b-1bb2-4ef9-8d7d-a998ca12e7d7";
- $templateUri           = "https://raw.githubusercontent.com/Teutenberg/azure-scripts/master/template/demo-vm-template.json";
+ $templateUri           = "https://raw.githubusercontent.com/Teutenberg/azure-scripts/master/template/vm-win2016-template.json";
  $parametersUri         = "https://raw.githubusercontent.com/Teutenberg/azure-scripts/master/template/demo-vm-parameters.json";
  $resourceGroupName     = "DevAutomationRG";
  $resourceGroupLocation = "Australia Southeast";
