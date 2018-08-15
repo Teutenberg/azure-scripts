@@ -21,31 +21,31 @@
             "type": "string"
         },
         "networkInterfaceName": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "[concat(parameters('virtualMachineName'),'-ni')]"
         },
         "networkSecurityGroupName": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "[concat(parameters('virtualMachineName'),'-nsg')]"
         },
         "storageAccountName": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "[concat(parameters('virtualMachineName'),'-sa')]"
         },
         "subnetName": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "default"
         },
         "publicIpAddressName": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "[concat(parameters('virtualMachineName'),'-ip')]"
         },
         "publicIpAddressType": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "Dynamic"
         },
         "publicIpAddressSku": {
-            "type": "string"
+            "type": "string",
             "defaultValue": "Basic"
         }
     },
