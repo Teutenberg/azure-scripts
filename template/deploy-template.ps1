@@ -27,7 +27,6 @@
  $resourceGroupName     = "DevAutomationRG";
  $resourceGroupLocation = "Australia Southeast";
  $keyVaultName          = "DevAutomationKV"
- $virtualMachineName    = "demotest"
 
 <#
 .SYNOPSIS
@@ -82,25 +81,30 @@ else{
 
 # Generate new secret and add to key vault if not exists already
 [Reflection.Assembly]::LoadWithPartialName("System.Web")
-$secret  = ConvertTo-SecureString -String ([system.web.security.membership]::GeneratePassword(24,4)) -AsPlainText -Force
-$secretKeyName = (Split-Path $templateUri -Leaf).Split('.')[0] + '-admin'
-Set-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName -SecretValue $secret
 
+$secretKeyName = ((Invoke-WebRequest $parametersUri).Content | ConvertFrom-Json).parameters.adminPassword.reference.secretName
+$secret = (Get-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName).SecretValue
+
+if (!$secret) {
+    Write-Host 'Adding new secret in KeyVault...'
+    $secret = ConvertTo-SecureString -String ([system.web.security.membership]::GeneratePassword(24,4)) -AsPlainText -Force 
+    Set-AzureKeyVaultSecret -VaultName $keyVaultName -Name $secretKeyName -SecretValue $secret
+} else {
+    Write-Host 'Using existing secret in KeyVault...'
+}
 
 # Start the deployment
 Write-Host "Starting deployment...";
-if(Test-Path $parametersUri) {
+if((Invoke-WebRequest $parametersUri).StatusCode -eq 200) {
     New-AzureRmResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
         -TemplateUri $templateUri `
         -TemplateParameterUri $parametersUri `
-        -adminPassword $secret `
         -verbose;
 } else {
     New-AzureRmResourceGroupDeployment `
         -ResourceGroupName $resourceGroupName `
         -TemplateUri $templateUri `
-        -adminPassword $secret `
         -verbose;
 }
 
