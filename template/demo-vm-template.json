@@ -22,15 +22,15 @@
         },
         "networkInterfaceName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('virtualMachineName'),'-ni')]"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'ni')]"
         },
         "networkSecurityGroupName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('virtualMachineName'),'-nsg')]"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'nsg')]"
         },
         "storageAccountName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('virtualMachineName'),'-sa')]"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'sa')]"
         },
         "subnetName": {
             "type": "string",
@@ -38,7 +38,7 @@
         },
         "publicIpAddressName": {
             "type": "string",
-            "defaultValue": "[concat(parameters('virtualMachineName'),'-ip')]"
+            "defaultValue": "[concat(parameters('virtualMachineName'),'ip')]"
         },
         "publicIpAddressType": {
             "type": "string",
