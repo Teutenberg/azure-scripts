@@ -8,11 +8,11 @@
  .PARAMETER subscriptionId
     The subscription id where the template will be deployed.
 
- .PARAMETER templateFilePath
-    Path to the template file. Defaults to template.json.
+ .PARAMETER templateUri
+    URL to the template file. 
 
- .PARAMETER parametersFilePath
-    Path to the parameters file. Defaults to parameters.json. If file is not found, will prompt for parameter values based on template.
+ .PARAMETER parametersUri
+    URL to the parameters file.
 
  .PARAMETER resourceGroupName
     The resource group where the template will be deployed. Can be the name of an existing or a new resource group.
@@ -46,9 +46,9 @@ Function RegisterRP {
 #******************************************************************************
 $ErrorActionPreference = "Stop"
 
-# Sign-in to Azure if not already
+# Sign-in to Azure if not already. Connect script prevents interactive login if already logged in. 
 cd $PSScriptRoot;
-.\connect.ps1;
+.\connect.ps1 -subscriptionId $subscriptionId
 
 # select subscription
 Write-Host "Selecting subscription '$subscriptionId'";
