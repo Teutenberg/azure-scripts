@@ -24,27 +24,6 @@
         },
         "virtualNetworkName": {
             "value": "DevAutomationVN"
-        },
-        "networkInterfaceName": {
-            "value": "demo610"
-        },
-        "networkSecurityGroupName": {
-            "value": "demo-nsg"
-        },
-        "storageAccountName": {
-            "value": "demosa"
-        },
-        "subnetName": {
-            "value": "default"
-        },
-        "publicIpAddressName": {
-            "value": "demo-ip"
-        },
-        "publicIpAddressType": {
-            "value": "Dynamic"
-        },
-        "publicIpAddressSku": {
-            "value": "Basic"
         }
     }
 }
